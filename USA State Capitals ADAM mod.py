@@ -1,11 +1,9 @@
 from random import choice
 from string import capwords
 
-# Setting the <<points>> variable:
+# Setting variables:
 
 points = 0
-
-# Defining <<States : Capitals>> dictionary:
 
 capitals = {
   "California" : "Sacramento",
@@ -19,6 +17,8 @@ capitals = {
   "New Mexico" : "Santa Fe"
   }
 
+available_states = list(capitals.keys())
+
 # Defining game mechanics functions:
 
 def choose_question():
@@ -26,7 +26,15 @@ def choose_question():
   Returns string:  a random KEY
   from dictionary capitals.
   """
-  return choice(list(capitals.keys()))
+  return choice(available_states)
+
+def burn_state(state):
+  """
+  Removes a KEY from the capitals
+  DICT to make sure every one KEY
+  is used only once.
+  """
+  available_states.remove(state)
 
 def ask_question(capital):
   """
@@ -34,7 +42,7 @@ def ask_question(capital):
   int score based on validity
   of the user's answer. Answer
   must be string equal to VALUE
-  of capital KEY in capitals dict.
+  of capital KEY in capitals DICT.
   """
   global points
   answer = capwords(input("What is the capital of "
@@ -46,6 +54,7 @@ def ask_question(capital):
     points -= 100
     print ("Ooo, sorry, that\'s not correct dumbo. "
            + "You lose a 100 points! \n")
+  burn_state(capital)
 
 def final_score():
   """
@@ -53,8 +62,8 @@ def final_score():
   on user's score.
   """
   if points == 100:
-    print("That's all the questions. You got:\n"
-          + str(points) + " points. Meh, I\'ve seen better.\n\n")
+    print("That's all the questions. You got:\n" + str(points)
+          + " points. Meh, I\'ve seen better.\n\n")
   elif points == 200:
     print("That's all the questions. You got:\n" + str(points)
           + " points. Try harder next time.\n\n")
