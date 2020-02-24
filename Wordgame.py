@@ -5,8 +5,6 @@ wordlist = open('words.txt', 'r')
 words = [line[:-1] for line in wordlist]
 wordlist.close()
 
-print(words)
-
 def select_secret_word():
   secret = random.choice(words)
   return secret
