@@ -1,93 +1,109 @@
-player = {
-    "attributes": {},
-    "skills": {}
-}
+player = {}
 
 attribs = {
-    "starsign": {
+    "Starsign": {
         1: "Liberace",
         2: "The constellation formerly known as Prince",
         3: "Vomitus"
     },
-    "provenience": {
+    "Provenience": {
         1: "multi-generation village idiot",
         2: "stuck-up noble",
         3: "a mage that\'s slightly inappropriate with male apprentices"
     }
 }
 
-da_list = ["stamina", "tomfoolery", "charisma", "strength"]
+
+da_list = ["Stamina", "Tomfoolery", "Swagger", "Strength", "Brainsmarts", "Liver-power", "Witicism"]
 
 
 def wrong_input():
-    print("Sorry, wrong input, try again.\n")
+    input("\nSorry, wrong input, press ENTER to try again.\n")
 
 
-def attributes_setup(attributes_dict):
+def attributes_setup(attributes_dict, attributes_list_name):
     global player
+    player[attributes_list_name] = {}
     for attribute in attributes_dict:
         attribute_selected = None
         while attribute_selected is None:
-            print("Select your character's " + attribute + ".\nThe available choices are:\n """)
+            print("\nSelect your character's " + attribute + ".\n")
             for key in attributes_dict[attribute]:
                 print("Press " + str(key) + " for " + attributes_dict[attribute][key])
             try:
-                answer = (int(input(":\n")))
+                answer = (int(input("")))
                 if answer in attributes_dict[attribute]:
                     attribute_selected = attributes_dict[attribute][answer]
                 else:
                     wrong_input()
             except ValueError:
                 wrong_input()
-        player["attributes"][attribute] = attribute_selected
+        player[attributes_list_name][attribute] = attribute_selected
 
 
-def set_up_single_skill(total_points, skill_min, skill_max, skill_list):
+def set_up_single_skill(total_points, skill_min, skill_max, skill_list, skillset_name):
     global player
-    total = total_points
+    total = total_points - (len(skill_list) * skill_min)
+    player[skillset_name] = {}  
     for s in skill_list:
-        skill_value = None
-        while skill_value not in range(skill_min, skill_max + 1):
+        player[skillset_name][s] = skill_min
+    for s in skill_list:
+        skill_value = 0
+        while True:            
             try:
-                if s == skill_list[-1]:
-                    skill_value = total
-                    break
-                answer = int(input("How many for: " + s + "?\n"))
-                if 0 < answer <= skill_max:
-                    if s != skill_list[-2] and answer <= total:
+                print("You got " + str(total) + " points left.")
+                answer = int(input("\nAssign points to " + str(s) + ".\n"))
+                if answer <= total:                    
+                    if 0 <= answer <= (skill_max - skill_min):
+                        skill_value += answer
                         total -= answer
-                        skill_value = answer
-                    elif s == skill_list[-2] and answer == total:
-                        print("Sorry, can\'t do that, you got " + str(total) + " points left and two skills left.\n")
-                        continue
-                    elif s == skill_list[-2] and total - answer != skill_max:
-                        print("Sorry, can\'t do that, you got " + str(total) + " points left and two skills left.\n")
-                        continue
-                    elif s == skill_list[-2] and answer < total:
-                        total -= answer
-                        skill_value = answer
-                    elif s == skill_list[-1]:
-                        skill_value = total
+                        break
                     else:
-                        print("Not enough points. You got " + str(total) + " left to assign.\n")
+                        print("\nPlease select value between 0 and " + str(skill_max - skill_min) + ".\n")
                         continue
                 else:
-                    print("Please enter a number between " + str(skill_min) + " and " + str(skill_max) + ".\n")
+                    print("\nNot enough points. You got " + str(total) + " points.\n")                    
             except ValueError:
-                wrong_input()
-        player["skills"][s] = skill_value
+                wrong_input
+                continue                
+        player[skillset_name][s] += skill_value
+    if total > 0:
+      print("\nYou have unused points!!!\n")
+ 
+
+def skills_setup(total_points, skill_min, skill_max, skill_list, skillset_name):
+    input("\nMinimum of 0 and a maximum of " + str(skill_max - 1) + " can be devoted to a skill. Press ENTER.\n")
+    set_up_single_skill(total_points, skill_min, skill_max, skill_list, skillset_name)
 
 
-def skills_setup(total_points, skill_min, skill_max, skill_list):
-    global player
-    print("\nMinimum of " + str(skill_min) + " and Maximum of " + str(skill_max) + " can be devoted to a skill.\n")
-    set_up_single_skill(total_points, skill_min, skill_max, skill_list)
-
+def set_up_review(player_dict_segment):
+    while True:
+        for key in player_dict_segment:
+            print(key + " : " + str(player_dict_segment[key]))
+        answer = (input("\nPress Y to proceed and N to re-set.\n")).lower()
+        if answer == "y":
+            ready = True
+            break
+        elif answer == "n":
+            ready = False
+            break
+        else:
+            wrong_input()
+            continue
+    return ready
+   
 
 def full_character_setup():
-    skills_setup(12, 1, 5, da_list)
-    attributes_setup(attribs)
+    ready = False
+    while ready is False:
+        skills_setup(23, 1, 5, da_list, "Umiejetnosci")
+        ready = set_up_review(player["Umiejetnosci"])
+    ready = False     
+    while ready is False:
+        attributes_setup(attribs, "Atrybuty")
+        ready = set_up_review(player["Atrybuty"])        
     print(player)
+
 
 full_character_setup()
 
