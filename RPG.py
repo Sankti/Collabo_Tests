@@ -60,6 +60,9 @@ def set_up_single_skill(total_points, skill_min, skill_max, skill_list):
                     elif s == skill_list[-2] and answer == total:
                         print("Sorry, can\'t do that, you got " + str(total) + " points left and two skills left.\n")
                         continue
+                    elif s == skill_list[-2] and total - answer != 5:
+                        print("Sorry, can\'t do that, you got " + str(total) + " points left and two skills left.\n")
+                        continue
                     elif s == skill_list[-2] and answer < total:
                         total -= answer
                         skill_value = answer
@@ -89,6 +92,7 @@ def full_character_setup():
 full_character_setup()
 
 
-
-
-
+    
+    
+    
+    
